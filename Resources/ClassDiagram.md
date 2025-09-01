@@ -3,7 +3,7 @@
 **Course:** IT643 - Software Design and Testing  
 **Professor:** Ankush Chander  
 **Project Title:** ElevateU  
-**Group Name:** XCoders
+**Group Name:** XCoders  
 **Team Members:**  
 - Chinmai Kewlani *(Team Lead)* – [chinmaikewlani](https://github.com/chinmaikewlani)  
 - Virag Koradiya – [Virag-Koradiya](https://github.com/Virag-Koradiya)  
@@ -45,4 +45,5 @@ The system is developed using the **MERN stack.**
 ---
 
 ✨ This class diagram serves as a visual reference for understanding the **domain model** of *ElevateU*.
+
 
