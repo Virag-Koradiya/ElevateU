@@ -20,6 +20,7 @@ app.use(
 );
 
 app.use("/api/user", userRoute);
+app.use("/api/company", companyRoute);
 // app.use("/", require("./routes"));
 
 app.listen(process.env.PORT || 8000, (err) => {
