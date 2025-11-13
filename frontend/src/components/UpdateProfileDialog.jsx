@@ -49,8 +49,10 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
             return false;
         }
 
+        const phone = String(input.phoneNumber || "").trim();
+
         const phoneRegex = /^[\d\s\-\(\)\+]{10,15}$/;
-        if (!input.phoneNumber || !phoneRegex.test(input.phoneNumber.replace(/\D/g, ''))) {
+        if (!phone || !phoneRegex.test(phone.replace(/\D/g, ''))) {
             toast.error("Phone Number is required and must contain 10 to 15 digits.");
             return false;
         }

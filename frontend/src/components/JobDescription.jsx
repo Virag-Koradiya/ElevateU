@@ -107,7 +107,7 @@ const JobDescription = () => {
           </h1>
           <h1 className="font-bold">
             Experience:{' '}
-            <span className="pl-4 font-normal text-gray-800">{singleJob?.experience} yrs</span>
+            <span className="pl-4 font-normal text-gray-800">{singleJob?.experienceLevel} yrs</span>
           </h1>
           <h1 className="font-bold">
             Salary:{' '}
