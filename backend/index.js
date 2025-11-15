@@ -29,6 +29,8 @@ app.use("/static", express.static(path.join(process.cwd(), "public")));
 
 const corsOptions = {
     origin: [
+        'https://elevate-u-jobs.vercel.app',
+        'https://elevate-u-ashen.vercel.app',
         'http://localhost:5173', // vite dev server (default)
         'http://127.0.0.1:5173',
     ],

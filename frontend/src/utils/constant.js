@@ -1,4 +1,4 @@
-const BASE_API_URL = "http://localhost:3000";
+const BASE_API_URL = "https://elevate-u-backend-beta.vercel.app";
 
 export const USER_API_END_POINT = `${BASE_API_URL}/api/user`;
 export const JOB_API_END_POINT = `${BASE_API_URL}/api/job`;
