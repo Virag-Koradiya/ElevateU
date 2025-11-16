@@ -23,13 +23,12 @@ const deleteJobHandler = async (jobId) => {
 
       // Remove deleted job from UI without reload
       setFilterJobs((prev) => prev.filter((job) => job._id !== jobId));
-      // (Optional) Also remove from allAdminJobs via Redux if you want global update
     } else {
-      toast.error(res.data.message || "Failed to delete job.");
+    //   toast.error(res.data.message || "Failed to delete job.");
     }
   } catch (error) {
     console.error(error);
-    toast.error(error?.response?.data?.message || "Failed to delete job.");
+    // toast.error(error?.response?.data?.message || "Failed to delete job.");
   }
 };
 
