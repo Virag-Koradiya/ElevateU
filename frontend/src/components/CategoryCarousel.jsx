@@ -22,7 +22,7 @@ const CategoryCarousel = () => {
     }
 
     return (
-        <div>
+        <section>
             <Carousel className="w-full max-w-xl mx-auto my-20">
                 <CarouselContent>
                     {
@@ -36,7 +36,7 @@ const CategoryCarousel = () => {
                 <CarouselPrevious />
                 <CarouselNext />
             </Carousel>
-        </div>
+        </section>
     )
 }
 

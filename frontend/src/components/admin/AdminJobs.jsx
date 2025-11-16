@@ -20,7 +20,7 @@ const AdminJobs = () => {
   return (
     <div className="min-h-screen bg-slate-100">
       <Navbar />
-      <div className='max-w-6xl mx-auto my-10'>
+      <section className='max-w-6xl mx-auto my-10'>
         <div className='flex items-center justify-between my-5'>
           <Input
             className="w-fit  bg-indigo-50 border border-purple-500"
@@ -30,7 +30,7 @@ const AdminJobs = () => {
           <Button onClick={() => navigate("/admin/jobs/create")}>New Jobs</Button>
         </div>
         <AdminJobsTable />
-      </div>
+      </section>
     </div>
   )
 }

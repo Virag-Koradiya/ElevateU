@@ -2,9 +2,37 @@ import React, { useEffect, useState } from 'react'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
 import { Avatar, AvatarImage } from '../ui/avatar'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
-import { Edit2, Eye, MoreHorizontal } from 'lucide-react'
+import { Edit2, Eye, MoreHorizontal, Trash } from 'lucide-react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import axios from "axios";
+import { JOB_API_END_POINT } from "@/utils/constant";
+import { toast } from "sonner";
+
+const deleteJobHandler = async (jobId) => {
+  const confirmDelete = window.confirm("Are you sure you want to delete this job?");
+  if (!confirmDelete) return;
+
+  try {
+    const res = await axios.delete(`${JOB_API_END_POINT}/delete/${jobId}`, {
+      withCredentials: true,
+    });
+
+    if (res.data.success) {
+      toast.success(res.data.message || "Job deleted successfully.");
+
+      // Remove deleted job from UI without reload
+      setFilterJobs((prev) => prev.filter((job) => job._id !== jobId));
+      // (Optional) Also remove from allAdminJobs via Redux if you want global update
+    } else {
+      toast.error(res.data.message || "Failed to delete job.");
+    }
+  } catch (error) {
+    console.error(error);
+    toast.error(error?.response?.data?.message || "Failed to delete job.");
+  }
+};
+
 
 const AdminJobsTable = () => { 
     const {allAdminJobs, searchJobByText} = useSelector(store=>store.job);
@@ -53,6 +81,10 @@ const AdminJobsTable = () => {
                                             <div onClick={()=> navigate(`/admin/jobs/${job._id}/applicants`)} className='flex items-center w-fit gap-2 cursor-pointer mt-2'>
                                                 <Eye className='w-4'/>
                                                 <span>Applicants</span>
+                                            </div>
+                                            <div onClick={() => deleteJobHandler(job._id)} className='flex items-center w-fit gap-2 cursor-pointer mt-2'>
+                                                <Trash className='w-4'/>
+                                                <span>Delete</span>
                                             </div>
                                         </PopoverContent>
                                     </Popover>

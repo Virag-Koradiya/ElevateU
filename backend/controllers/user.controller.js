@@ -247,3 +247,25 @@ export const updateProfile = async (req, res) => {
     return res.status(500).json({ success:false, message: 'Internal server error.' });
   }
 };
+
+export const renderUserInfoPage = async (req, res) => {
+  try {
+    const userId = req.id; // set by isAuthenticated middleware
+
+    if (!userId) {
+      return res.status(401).send("Unauthorized. Please log in first.");
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).send("User not found.");
+    }
+
+    // Render EJS view and pass user
+    return res.render("user-info", { user });
+  } catch (error) {
+    console.error("renderUserInfoPage error:", error);
+    return res.status(500).send("Internal server error.");
+  }
+};

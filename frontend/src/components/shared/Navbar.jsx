@@ -34,10 +34,10 @@ const Navbar = () => {
   };
 
   return (
-    <div className="bg-black">
+    <nav className="bg-black">
       <div className="flex items-center justify-between mx-auto max-w-7xl h-16 px-4">
         <div className="mb-4 md:mb-0">
-          <img src="/ElevateU_logo.png" alt="ElevateU Logo" className="h-10" />
+          <img src="http://localhost:3000/static/elevateu_logo.png" alt="ElevateU Logo" className="h-10" />
         </div>
 
         <div className="flex items-center gap-12">
@@ -145,7 +145,7 @@ const Navbar = () => {
           )}
         </div>
       </div>
-    </div>
+    </nav>
   );
 };
 

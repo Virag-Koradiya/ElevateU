@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ElevateU - SSR User Info</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100">
+
+  <div class="max-w-3xl mx-auto mt-10 bg-white shadow-md rounded-2xl p-8">
+    <h1 class="text-3xl font-bold mb-2 text-indigo-700">
+      Hello, <%= user.fullname %> 👋
+    </h1>
+
+    <p class="text-gray-700 mb-6">
+      This page is rendered on the server using <strong>EJS</strong> and your details are fetched directly from MongoDB.
+    </p>
+
+    <div class="bg-indigo-50 p-4 rounded-lg mb-6 space-y-1">
+      <p><strong>Email:</strong> <%= user.email %></p>
+      <p><strong>Phone:</strong> <%= user.phoneNumber %></p>
+      <p><strong>Role:</strong> <%= user.role %></p>
+      <p><strong>Bio:</strong> <%= (user.profile && user.profile.bio) || "No bio added yet." %></p>
+    </div>
+
+    <h2 class="text-2xl font-semibold text-purple-600 mb-3">About ElevateU</h2>
+
+    <p class="text-gray-700 leading-relaxed mb-4">
+      <strong>ElevateU</strong> is a platform built for students to help them explore opportunities,
+      apply for jobs, and grow in their careers. It is designed to make the job search journey easier
+      and more structured.
+    </p>
+
+    <p class="text-gray-700 leading-relaxed mb-4">
+      This website has been developed under the guidance of
+      <strong>Prof. Shruti Bhilare</strong>.
+    </p>
+
+    <p class="text-gray-700 leading-relaxed">
+      We are
+      <strong>Chinmai Kewlani</strong> and <strong>Virag Koradiya</strong>,
+      students of <strong>DAIICT</strong>.
+      <br />
+      This page is a demonstration that our project also supports
+      <strong>server-side rendering (SSR)</strong> using EJS, alongside the React frontend.
+    </p>
+  </div>
+
+</body>
+</html>
