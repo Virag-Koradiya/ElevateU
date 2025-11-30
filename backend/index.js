@@ -3,6 +3,7 @@ import express from "express";
 import connectDB from "./utils/db.js";
 import cors from "cors";
 import userRoute from "./routes/user.route.js";
+import applicationRoute from "./routes/application.route.js";
 import companyRoute from "./routes/company.route.js";
 import jobRoute from "./routes/job.route.js";
 
@@ -22,6 +23,7 @@ app.use(
 );
 
 app.use("/api/user", userRoute);
+app.use("/api/application", applicationRoute);
 app.use("/api/company", companyRoute);
 app.use("/api/job", jobRoute);
 // app.use("/", require("./routes"));
