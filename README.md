@@ -64,9 +64,8 @@ https://nexthire-main-deployment.onrender.com
 
 ### 1. Clone the Repository
 
-git clone https://github.com/zeelghori27012004/NextHire
-
-cd NextHire
+git clone https://github.com/Virag-Koradiya/ElevateU.git
+cd ElevateU
 
 ### 2. Create a .env file in the root of your backend directory with:
 
