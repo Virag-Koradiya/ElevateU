@@ -1,4 +1,4 @@
-const BASE_API_URL = "https://elevate-u-backend-beta.vercel.app";
+const BASE_API_URL = "https://elevateu-oog5.onrender.com";
 
 export const USER_API_END_POINT = `${BASE_API_URL}/api/user`;
 export const JOB_API_END_POINT = `${BASE_API_URL}/api/job`;
