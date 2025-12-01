@@ -37,7 +37,7 @@ const Navbar = () => {
     <nav className="bg-black">
       <div className="flex items-center justify-between mx-auto max-w-7xl h-16 px-4">
         <div className="mb-4 md:mb-0">
-          <img src="https://elevate-u-backend-beta.vercel.app/static/elevateu_logo.png" alt="ElevateU Logo" className="h-10" />
+          <img src="https://elevateu-oog5.onrender.com/static/elevateu_logo.png" alt="ElevateU Logo" className="h-10" />
         </div>
 
         <div className="flex items-center gap-12">
