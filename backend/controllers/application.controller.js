@@ -1,7 +1,7 @@
 import { Application } from "../models/application.model.js";
 import { Job } from "../models/job.model.js";
 
-export const applyJob = async (req, res) => {
+export const applyJob = async (req, res, next) => {
     try {
         const userId = req.id;
         const jobId = req.params.id;
@@ -42,10 +42,10 @@ export const applyJob = async (req, res) => {
             success:true
         })
     } catch (error) {
-        console.log(error);
+        next(error);
     }
 };
-export const getAppliedJobs = async (req,res) => {
+export const getAppliedJobs = async (req, res, next) => {
     try {
         const userId = req.id;
         const application = await Application.find({applicant:userId}).sort({createdAt:-1}).populate({
@@ -67,11 +67,11 @@ export const getAppliedJobs = async (req,res) => {
             success:true
         })
     } catch (error) {
-        console.log(error);
+        next(error);
     }
 }
 
-export const getApplicants = async (req,res) => {
+export const getApplicants = async (req, res, next) => {
     try {
         const jobId = req.params.id;
         const job = await Job.findById(jobId).populate({
@@ -92,10 +92,10 @@ export const getApplicants = async (req,res) => {
             succees:true
         });
     } catch (error) {
-        console.log(error);
+        next(error);
     }
 }
-export const updateStatus = async (req,res) => {
+export const updateStatus = async (req, res, next) => {
     try {
         const {status} = req.body;
         const applicationId = req.params.id;
@@ -125,6 +125,6 @@ export const updateStatus = async (req,res) => {
         });
 
     } catch (error) {
-        console.log(error);
+        next(error);
     }
 }

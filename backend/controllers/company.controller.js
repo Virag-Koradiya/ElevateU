@@ -2,7 +2,7 @@ import { Company } from "../models/company.model.js";
 import getDataUri from "../utils/datauri.js";
 import cloudinary from "../utils/cloudinary.js";
 
-export const registerCompany = async (req, res) => {
+export const registerCompany = async (req, res, next) => {
     try {
         const { companyName } = req.body;
         if (!companyName) {
@@ -29,10 +29,10 @@ export const registerCompany = async (req, res) => {
             success: true
         })
     } catch (error) {
-        console.log(error);
+        next(error);
     }
 }
-export const getCompany = async (req, res) => {
+export const getCompany = async (req, res, next) => {
     try {
         const userId = req.id; 
         const companies = await Company.find({ userId });
@@ -47,11 +47,11 @@ export const getCompany = async (req, res) => {
             success:true
         })
     } catch (error) {
-        console.log(error);
+        next(error);
     }
 }
 
-export const getCompanyById = async (req, res) => {
+export const getCompanyById = async (req, res, next) => {
     try {
         const companyId = req.params.id;
         const company = await Company.findById(companyId);
@@ -66,10 +66,10 @@ export const getCompanyById = async (req, res) => {
             success: true
         })
     } catch (error) {
-        console.log(error);
+        next(error);
     }
 }
-export const updateCompany = async (req, res) => {
+export const updateCompany = async (req, res, next) => {
     try {
         const { name, description, website, location } = req.body;
  
@@ -95,6 +95,6 @@ export const updateCompany = async (req, res) => {
         })
 
     } catch (error) {
-        console.log(error);
+        next(error);
     }
 }

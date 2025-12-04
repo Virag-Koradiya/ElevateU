@@ -11,25 +11,23 @@ const makeCookieOptions = (maxAgeMs = 24 * 60 * 60 * 1000) => ({
   maxAge: maxAgeMs,
 });
 
-export const register = async (req, res) => {
+export const register = async (req, res, next) => {
     try {
         let { fullname, email, phoneNumber, password, role } = req.body;
          
         if (!fullname || !email || !phoneNumber || !password || !role) {
-            return res.status(400).json({
-                message: "Something is missing",
-                success: false
-            });
+            const err = new Error("fullname, email, phoneNumber, password and role are required.");
+            err.status = 400;
+            throw err;
         };
         email = String(email).trim().toLowerCase();
 
         // Check if user already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.status(400).json({
-                message: "User already exists with this email.",
-                success: false,
-            });
+            const err = new Error("User already exists with this email.");
+            err.status = 400;
+            throw err;
         }
 
         let profilePhotoUrl = "";
@@ -39,8 +37,8 @@ export const register = async (req, res) => {
                 const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
                 profilePhotoUrl = cloudResponse.secure_url;
             } catch (err) {
-                console.error('Cloudinary upload failed:', err);
-                return res.status(502).json({ message: 'Failed to upload profile photo.', success: false });
+                err.status = 502;
+                throw err;
             }
         }
 
@@ -58,7 +56,9 @@ export const register = async (req, res) => {
             });
         } catch (createErr) {
             if (createErr.code === 11000 && createErr.keyPattern && createErr.keyPattern.email) {
-                return res.status(409).json({ message: 'User already exists with this email.', success: false });
+              const err = new Error("User already exists with this email.");
+              err.status = 409;
+              throw err;
             }
             throw createErr;
         }
@@ -72,12 +72,11 @@ export const register = async (req, res) => {
             profile: newUser.profile
         }, success: true });
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: "Internal server error", success: false });
+        next(error);
     }
 };
 
-export const login = async (req, res) => {
+export const login = async (req, res, next) => {
   try {
     let { email, password, role } = req.body;
 
@@ -138,29 +137,24 @@ export const login = async (req, res) => {
         success: true,
       });
   } catch (error) {
-    console.error('Login error:', error);
-    return res.status(500).json({
-      message: 'Internal server error.',
-      success: false,
-    });
+    next(error);
   }
 };
 
 
-export const logout = async (req, res) => {
+export const logout = async (req, res, next) => {
   try {
     return res
       .status(200)
       .cookie('token', '', { ...makeCookieOptions(0), expires: new Date(0) })
       .json({ message: 'Logged out successfully.', success: true });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: 'Logout failed.', success: false });
+    next(error);
   }
 };
 
 
-export const updateProfile = async (req, res) => {
+export const updateProfile = async (req, res, next) => {
   try {
     const { fullname, email, phoneNumber, bio, skills } = req.body;
     const file = req.file;
@@ -220,8 +214,8 @@ export const updateProfile = async (req, res) => {
           resource_type: 'auto',
         });
       } catch (uErr) {
-        console.error('Cloud upload failed', uErr);
-        return res.status(502).json({ success:false, message: 'Failed to upload resume. Try again later.' });
+        uErr.status = 502;
+        return next(uErr);
       }
 
       if (cloudResponse && cloudResponse.secure_url) {
@@ -243,14 +237,13 @@ export const updateProfile = async (req, res) => {
 
     return res.status(200).json({ success: true, message: 'Profile updated successfully.', user: safeUser });
   } catch (error) {
-    console.error('updateProfile error:', error);
-    return res.status(500).json({ success:false, message: 'Internal server error.' });
+    next(error);
   }
 };
 
-export const renderUserInfoPage = async (req, res) => {
+export const renderUserInfoPage = async (req, res, next) => {
   try {
-    const userId = req.id; // set by isAuthenticated middleware
+    const userId = req.id;
 
     if (!userId) {
       return res.status(401).send("Unauthorized. Please log in first.");
@@ -262,10 +255,8 @@ export const renderUserInfoPage = async (req, res) => {
       return res.status(404).send("User not found.");
     }
 
-    // Render EJS view and pass user
     return res.render("user-info", { user });
   } catch (error) {
-    console.error("renderUserInfoPage error:", error);
-    return res.status(500).send("Internal server error.");
+    next(error);
   }
 };
