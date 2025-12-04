@@ -1,98 +1,42 @@
-import { Job } from "../models/job.model.js";
+import {
+  createJob,
+  getAllJobsService,
+  getJobByIdService,
+  getAdminJobsService,
+  deleteJobService,
+} from "../services/job.service.js";
 
-
+// POST /api/jobs
 export const postJob = async (req, res, next) => {
-    try {
-        const { title, description, requirements, salary, location, jobType, experience, position, companyId } = req.body;
-        const userId = req.id;
-
-        if (!title || !description || !requirements || !salary || !location || !jobType || !experience || !position || !companyId) {
-            return res.status(400).json({
-                message: "Something is missing.",
-                success: false
-            })
-        };
-        const job = await Job.create({
-            title,
-            description,
-            requirements: requirements.split(","),
-            salary: Number(salary),
-            location,
-            jobType,
-            experienceLevel: experience,
-            position,
-            company: companyId,
-            created_by: userId
-        });
-        return res.status(201).json({
-            message: "New job created successfully.",
-            job,
-            success: true
-        });
-    } catch (error) {
-        next(error);
-    }
-}
-
-export const getAllJobs = async (req, res, next) => {
-    try {
-        const keyword = req.query.keyword || "";
-        const query = {
-            $or: [
-                { title: { $regex: keyword, $options: "i" } },
-                { description: { $regex: keyword, $options: "i" } },
-            ]
-        };
-        const jobs = await Job.find(query).populate({
-            path: "company"
-        }).sort({ createdAt: -1 });
-        if (!jobs) {
-            return res.status(404).json({
-                message: "Jobs not found.",
-                success: false
-            })
-        };
-        return res.status(200).json({
-            jobs,
-            success: true
-        })
-    } catch (error) {
-        next(error);
-    }
-}
-
-export const getJobById = async (req, res, next) => {
-    try {
-        const jobId = req.params.id;
-        const job = await Job.findById(jobId).populate({
-            path:"applications"
-        });
-        if (!job) {
-            return res.status(404).json({
-                message: "Jobs not found.",
-                success: false
-            })
-        };
-        return res.status(200).json({ job, success: true });
-    } catch (error) {
-        next(error);
-    }
-}
-
-export const getAdminJobs = async (req, res, next) => {
   try {
-    const adminId = req.id;
+    const job = await createJob({
+      title: req.body.title,
+      description: req.body.description,
+      requirements: req.body.requirements,
+      salary: req.body.salary,
+      location: req.body.location,
+      jobType: req.body.jobType,
+      experience: req.body.experience,
+      position: req.body.position,
+      companyId: req.body.companyId,
+      userId: req.id,
+    });
 
-    const jobs = await Job.find({ created_by: adminId })
-      .populate({ path: "company" })
-      .sort({ createdAt: -1 });
+    return res.status(201).json({
+      message: "New job created successfully.",
+      job,
+      success: true,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
-    if (!jobs || jobs.length === 0) {
-      return res.status(404).json({
-        message: "Jobs not found.",
-        success: false,
-      });
-    }
+// GET /api/jobs?keyword=...
+export const getAllJobs = async (req, res, next) => {
+  try {
+    const keyword = req.query.keyword || "";
+    const jobs = await getAllJobsService({ keyword });
 
     return res.status(200).json({
       jobs,
@@ -103,35 +47,45 @@ export const getAdminJobs = async (req, res, next) => {
   }
 };
 
+// GET /api/jobs/:id
+export const getJobById = async (req, res, next) => {
+  try {
+    const jobId = req.params.id;
+    const job = await getJobByIdService(jobId);
+
+    return res.status(200).json({ job, success: true });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// GET /api/admin/jobs
+export const getAdminJobs = async (req, res, next) => {
+  try {
+    const adminId = req.id;
+    const jobs = await getAdminJobsService(adminId);
+
+    return res.status(200).json({
+      jobs,
+      success: true,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// DELETE /api/jobs/:id
 export const deleteJob = async (req, res, next) => {
   try {
     const jobId = req.params.id;
-    const adminId = req.id; // logged-in user
+    const adminId = req.id;
 
-    // Find job
-    const job = await Job.findById(jobId);
-    if (!job) {
-      return res.status(404).json({
-        message: "Job not found.",
-        success: false,
-      });
-    }
-
-    // Check if this user created the job
-    if (job.created_by.toString() !== adminId.toString()) {
-      return res.status(403).json({
-        message: "You are not authorized to delete this job.",
-        success: false,
-      });
-    }
-
-    await Job.findByIdAndDelete(jobId);
+    await deleteJobService({ jobId, adminId });
 
     return res.status(200).json({
       message: "Job deleted successfully.",
       success: true,
     });
-
   } catch (error) {
     next(error);
   }
