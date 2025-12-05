@@ -3,7 +3,7 @@ ElevateU is a MERN stack job portal designed for students and recruiters. Studen
 
 ## Live Demo
 Render :
-https://nexthire-main-deployment.onrender.com
+https://elevate-u-jobs.vercel.app/
 
 ##  Features
 
@@ -64,7 +64,7 @@ https://nexthire-main-deployment.onrender.com
 
 ### 1. Clone the Repository
 
-git clone https://github.com/zeelghori27012004/NextHire
+git clone [https://github.com/Virag-Koradiya/ElevateU.git](https://github.com/Virag-Koradiya/ElevateU.git)
 
 cd NextHire
 
