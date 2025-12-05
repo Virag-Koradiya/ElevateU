@@ -1,4 +1,3 @@
-// testApp.js
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -18,11 +17,9 @@ app.use(
   })
 );
 
-// Routes used in integration tests
 app.use("/api/user", userRoute);
-app.use("/api/job", jobRoute);                         // ⬅️ add this
+app.use("/api/job", jobRoute);
 
-// Central error handler
 app.use(errorHandler);
 
 export default app;

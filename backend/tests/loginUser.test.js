@@ -1,9 +1,5 @@
-// tests/loginUser.test.js
 import { describe, it, expect, beforeEach, jest } from "@jest/globals";
 
-// 1. Mock dependencies used inside user.service.js
-
-// Mock User model
 jest.unstable_mockModule("../models/user.model.js", () => ({
   User: {
     findOne: jest.fn(),
@@ -25,13 +21,11 @@ jest.unstable_mockModule("jsonwebtoken", () => ({
   },
 }));
 
-// 🔴 IMPORTANT: Mock fileUpload so it does NOT import real cloudinary.js
 jest.unstable_mockModule("../utils/fileUpload.js", () => ({
   uploadProfilePhoto: jest.fn(),
   uploadResume: jest.fn(),
 }));
 
-// 2. After mocks are defined, import the real modules (they will receive mocks)
 const { User } = await import("../models/user.model.js");
 const bcrypt = (await import("bcryptjs")).default;
 const jwt = (await import("jsonwebtoken")).default;
@@ -72,7 +66,6 @@ describe("loginUser service", () => {
   it("throws 400 if user not found or role mismatch or no password", async () => {
     const invalidCredsMsg = "Incorrect email, password or role.";
 
-    // Case 1: user not found
     User.findOne.mockResolvedValue(null);
 
     await expect(
@@ -84,7 +77,6 @@ describe("loginUser service", () => {
 
     jest.clearAllMocks();
 
-    // Case 2: user found but role mismatch
     User.findOne.mockResolvedValue({
       _id: "user123",
       email: "role@example.com",
@@ -116,7 +108,7 @@ describe("loginUser service", () => {
       profile: {},
     });
 
-    bcrypt.compare.mockResolvedValue(false); // wrong password
+    bcrypt.compare.mockResolvedValue(false);
 
     await expect(
       loginUser({ email: "test@example.com", password: "wrongpass", role: "student" })
@@ -145,7 +137,7 @@ describe("loginUser service", () => {
     jwt.sign.mockReturnValue("mock-jwt-token");
 
     const result = await loginUser({
-      email: " Test@example.com ", // extra spaces & casing
+      email: " Test@example.com ",
       password: "correct-pass",
       role: "student",
     });

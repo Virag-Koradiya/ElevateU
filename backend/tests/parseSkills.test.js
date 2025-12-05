@@ -1,4 +1,3 @@
-// tests/parseSkills.test.js
 import { describe, it, expect } from "@jest/globals";
 import { parseSkills } from "../utils/parseSkills.js";
 

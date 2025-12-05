@@ -1,7 +1,4 @@
-// tests/updateUserProfile.test.js
 import { describe, it, expect, beforeEach, jest } from "@jest/globals";
-
-// 1. Mock dependencies
 
 jest.unstable_mockModule("../models/user.model.js", () => ({
   User: {
@@ -19,8 +16,6 @@ jest.unstable_mockModule("../utils/parseSkills.js", () => ({
   parseSkills: jest.fn(),
 }));
 
-// 2. Import AFTER mocks
-
 const { User } = await import("../models/user.model.js");
 const { uploadResume } = await import("../utils/fileUpload.js");
 const { parseSkills } = await import("../utils/parseSkills.js");
@@ -35,7 +30,7 @@ describe("updateUserProfile service", () => {
     await expect(
       updateUserProfile({
         userId: "user123",
-        data: { email: 123 }, // invalid type
+        data: { email: 123 },
         file: null,
       })
     ).rejects.toMatchObject({
@@ -78,7 +73,6 @@ describe("updateUserProfile service", () => {
 
     User.findById.mockResolvedValue(existingUser);
 
-    // Simulate another user with that email
     User.findOne.mockResolvedValue({
       _id: "otherUser",
       email: "new@example.com",
@@ -119,7 +113,7 @@ describe("updateUserProfile service", () => {
     };
 
     User.findById.mockResolvedValue(userDoc);
-    User.findOne.mockResolvedValue(null); // no conflicting email
+    User.findOne.mockResolvedValue(null);
     parseSkills.mockReturnValue(["React", "Node"]);
     uploadResume.mockResolvedValue({
       url: "https://cdn.example.com/resume.pdf",
@@ -133,22 +127,18 @@ describe("updateUserProfile service", () => {
         email: "new@mail.com",
         phoneNumber: 999,
         bio: "new bio",
-        skills: "React, Node", // string input
+        skills: "React, Node",
       },
-      file: { originalname: "cv.pdf" }, // mock file
+      file: { originalname: "cv.pdf" },
     });
 
-    // Email change path
     expect(User.findById).toHaveBeenCalledWith("user123");
     expect(User.findOne).toHaveBeenCalledWith({ email: "new@mail.com" });
 
-    // parseSkills usage
     expect(parseSkills).toHaveBeenCalledWith("React, Node");
 
-    // uploadResume usage
     expect(uploadResume).toHaveBeenCalledTimes(1);
 
-    // Check mutated userDoc fields
     expect(userDoc.fullname).toBe("New Name");
     expect(userDoc.email).toBe("new@mail.com");
     expect(userDoc.phoneNumber).toBe(999);
@@ -157,10 +147,8 @@ describe("updateUserProfile service", () => {
     expect(userDoc.profile.resume).toBe("https://cdn.example.com/resume.pdf");
     expect(userDoc.profile.resumeOriginalName).toBe("cv.pdf");
 
-    // save should be called
     expect(userDoc.save).toHaveBeenCalledTimes(1);
 
-    // Returned safe user
     expect(result).toEqual({
       _id: userDoc._id,
       fullname: userDoc.fullname,

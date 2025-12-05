@@ -39,7 +39,6 @@ jest.unstable_mockModule("jsonwebtoken", () => ({
   },
 }));
 
-// IMPORTS AFTER MOCKS
 const { Job } = await import("../models/job.model.js");
 const { parseRequirements } = await import("../utils/jobUtils.js");
 const jwt = (await import("jsonwebtoken")).default;
@@ -52,7 +51,6 @@ describe("JOB integration - POST /api/job/post", () => {
     jest.clearAllMocks();
     consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
 
-    // For all tests here, treat "valid.token" as authenticated with userId=admin123
     jwt.verify.mockImplementation((token, secret) => {
       if (token === "valid.token") {
         return { userId: "admin123", role: "recruiter" };
@@ -85,7 +83,7 @@ describe("JOB integration - POST /api/job/post", () => {
 
     const res = await request(app)
       .post("/api/job/post")
-      .set("Cookie", "token=valid.token") // isAuthenticated middleware
+      .set("Cookie", "token=valid.token")
       .send({
         title: "Frontend Dev",
         description: "Build UI",
@@ -99,10 +97,8 @@ describe("JOB integration - POST /api/job/post", () => {
       })
       .expect(201);
 
-    // 1) Requirements parsed
     expect(parseRequirements).toHaveBeenCalledWith("React,JS");
 
-    // 2) Job.create called with proper payload
     expect(Job.create).toHaveBeenCalledTimes(1);
     expect(Job.create).toHaveBeenCalledWith({
       title: "Frontend Dev",
@@ -114,10 +110,9 @@ describe("JOB integration - POST /api/job/post", () => {
       experienceLevel: 2,
       position: 3,
       company: "company123",
-      created_by: "admin123", // from jwt.verify via isAuthenticated
+      created_by: "admin123", 
     });
 
-    // 3) Response body
     expect(res.body).toEqual({
       message: "New job created successfully.",
       job: mockJob,
@@ -126,7 +121,6 @@ describe("JOB integration - POST /api/job/post", () => {
   });
 
   it("returns 400 and error body when required fields are missing", async () => {
-    // We don't need parseRequirements or Job.create here because validation fails early
 
     const res = await request(app)
       .post("/api/job/post")
@@ -144,7 +138,6 @@ describe("JOB integration - POST /api/job/post", () => {
       })
       .expect(400);
 
-    // errorHandler formats the error
     expect(res.body).toEqual({
       success: false,
       message: "Required fields are missing.",
